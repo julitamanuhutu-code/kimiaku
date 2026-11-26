@@ -166,6 +166,7 @@ function toast(m){toastMsg=m;clearTimeout(toastT);toastT=setTimeout(function(){t
 async function saveFile(name,data){
   var dl=null;try{if(typeof claude!=='undefined')dl=await claude.use('downloads')}catch(e){}
   if(dl){try{await dl.save({filename:name,data:data});toast('Berkas diproses: '+name);return}catch(e){if(e&&e.code==='declined')return}}
+  if(window.AndroidBridge&&typeof window.AndroidBridge.save==='function'){try{if(window.AndroidBridge.save(name,data)){toast('Tersimpan di folder Download: '+name);return}}catch(e){}}
   if(typeof claude==='undefined'){var a=document.createElement('a');try{var u=URL.createObjectURL(new Blob([data],{type:'application/octet-stream'}));a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();toast('Berkas diunduh: '+name);return}catch(e){}}
   modal={t:'teks',name:name,data:data};render()}
 function offlineHtml(){var c=document.documentElement.cloneNode(true);c.querySelector('#app').innerHTML='';c.querySelector('#seed').textContent=JSON.stringify({materi:S.materi,files:filesFor(S.materi)}).replace(/</g,'\\u003c');return '<!DOCTYPE html>\n'+c.outerHTML}

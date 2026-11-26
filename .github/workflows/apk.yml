@@ -1,0 +1,43 @@
+name: Bangun APK KIMIAKU
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'index.html'
+      - 'android/**'
+      - '.github/workflows/apk.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+      - name: Salin aplikasi web ke proyek Android
+        run: |
+          mkdir -p android/app/src/main/assets
+          cp index.html android/app/src/main/assets/index.html
+      - name: Bangun APK
+        run: gradle -p android assembleDebug --no-daemon
+      - name: Siapkan berkas APK
+        run: cp android/app/build/outputs/apk/debug/app-debug.apk KIMIAKU.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: KIMIAKU-apk
+          path: KIMIAKU.apk
+      - name: Terbitkan sebagai rilis (tautan unduhan tetap)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete apk-terbaru -y --cleanup-tag || true
+          gh release create apk-terbaru KIMIAKU.apk --title "KIMIAKU APK (terbaru)" --notes "APK KIMIAKU untuk Android. Unduh KIMIAKU.apk lalu pasang."
