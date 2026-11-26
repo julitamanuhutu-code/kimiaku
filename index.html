@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KIMIAKU – Smart Chemistry Learning Platform</title>
+<style>
+:root{--navy:#0A2F4A;--sea:#1B6CA0;--teal:#0E7C7B;--foam:#F2F9F9;--sand:#F6EEDD;--coral:#E8604C;--ink:#1F3B4D;--mut:#4A6475;--line:#D3E7EC}
+*{box-sizing:border-box}
+body{margin:0;background:var(--foam);color:var(--ink);font-family:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;line-height:1.5}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+.wrap{display:flex;flex-direction:column;min-height:100vh}
+main{flex:1;width:100%;max-width:820px;margin:0 auto;padding:0 0 84px}
+nav.bar{position:fixed;bottom:0;left:0;right:0;display:flex;background:#fff;border-top:1px solid var(--line);z-index:5}
+nav.bar button{flex:1;min-height:60px;border:0;border-top:3px solid transparent;background:#fff;color:var(--mut);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:11px;font-weight:700}
+nav.bar button.on{color:var(--navy);border-top-color:var(--sea)}
+@media(min-width:900px){.wrap{flex-direction:row}nav.bar{position:sticky;top:0;height:100vh;width:220px;flex-direction:column;justify-content:flex-start;background:var(--navy);border:0;padding:20px 12px;gap:6px;flex:0 0 220px}nav.bar .logo{display:block}nav.bar button{flex:0 0 auto;flex-direction:row;justify-content:flex-start;gap:12px;min-height:48px;padding:0 14px;border:0;border-radius:12px;background:transparent;color:#CFE9EE;font-size:15px}nav.bar button.on{background:var(--sea);color:#fff}main{padding-bottom:40px}}
+nav.bar .logo{display:none;color:#fff;font-weight:800;font-size:22px;letter-spacing:1px;padding:0 12px 16px}
+.hd{background:var(--navy);color:#fff;padding:24px 20px 6px}
+.hd h1,.hd h2{margin:0}
+.wave{display:block;width:100%;height:36px;background:var(--navy)}
+.pad{padding:16px 20px;display:flex;flex-direction:column;gap:14px}
+h2{font-size:24px;font-weight:800;margin:0}h3{font-size:17px;margin:0;font-weight:800}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px}
+.sand{background:var(--sand);border-radius:16px;padding:16px}
+.btn{min-height:48px;padding:0 22px;border:0;border-radius:12px;background:var(--sea);color:#fff;font-weight:800;font-size:16px}
+.btn.alt{background:#fff;color:var(--sea);border:1px solid var(--sea)}
+.btn.teal{background:var(--teal)}.btn.danger{background:#fff;color:#B03A28;border:1px solid var(--coral)}
+.btn.sm{min-height:44px;padding:0 14px;font-size:14px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.pill{min-height:36px;display:inline-flex;align-items:center;padding:0 14px;border-radius:18px;font-size:13px;font-weight:700}
+.pill.on{background:#D9F2EA;color:#0A5C5B}.pill.off{background:var(--sand);color:#7A4B00}
+.bar2{height:10px;background:#DCEBEF;border-radius:5px;overflow:hidden}.bar2>i{display:block;height:100%;background:var(--sea)}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px;text-align:center}.stat b{display:block;font-size:22px;color:var(--navy)}.stat span{font-size:12px;color:var(--mut)}
+.lnk{text-align:left;width:100%;background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:6px;color:var(--ink)}
+.tag{font-size:13px;font-weight:700;color:var(--teal)}
+.back{align-self:flex-start;min-height:44px;padding:0 10px;border:0;background:transparent;color:var(--sea);font-weight:700;font-size:15px}
+.txt p{margin:0 0 10px}
+input[type=text],input[type=password],textarea,select{width:100%;border:1px solid #9CC3D0;border-radius:10px;padding:10px 12px;background:#fff;min-height:44px}
+textarea{min-height:90px;resize:vertical}
+label{font-size:13px;font-weight:700;color:var(--mut);display:block;margin-bottom:4px}
+.opt{text-align:left;min-height:52px;padding:8px 16px;border-radius:12px;border:2px solid #C5DCE6;background:#fff;font-weight:600;font-size:15px;display:flex;justify-content:space-between;align-items:center;gap:8px;width:100%}
+.opt.ok{background:#D9F2EA;border-color:var(--teal)}.opt.no{background:#FCE4E0;border-color:var(--coral)}
+.steps{display:flex;gap:4px}.steps i{flex:1;height:6px;border-radius:3px;background:#DCEBEF}.steps i.v{background:var(--sea)}.steps i.c{background:var(--navy)}
+.ptab{overflow-x:auto;padding-bottom:6px}.pt{display:grid;grid-template-columns:repeat(18,34px);grid-auto-rows:42px;gap:3px;min-width:640px}
+.el{border:1px solid #9CC3D0;border-radius:6px;background:#fff;font-size:12px;font-weight:700;padding:0;color:var(--ink);line-height:1.1}
+.el small{display:block;font-size:9px;font-weight:400}.el.g1{background:#CDEDEA}.el.g2{background:#D6E6F5}.el.g17{background:#FAD9D2}.el.g18{background:#EFE4C8}.el.sea{box-shadow:0 0 0 2px var(--navy)}.el.sel{outline:3px solid var(--coral)}
+.nuc{display:inline-flex;flex-direction:column;font-size:.62em;line-height:1;vertical-align:middle;margin-right:2px;font-weight:700}
+table.t{width:100%;border-collapse:collapse;font-size:14px}table.t td{padding:6px 4px;border-bottom:1px solid var(--line)}
+.modalbg{position:fixed;inset:0;background:rgba(10,47,74,.55);display:flex;align-items:center;justify-content:center;padding:16px;z-index:20}
+.modal{background:#fff;border-radius:16px;padding:18px;max-width:560px;width:100%;max-height:88vh;overflow:auto;display:flex;flex-direction:column;gap:12px}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:90px;background:var(--navy);color:#fff;padding:12px 18px;border-radius:12px;z-index:30;font-size:14px;max-width:90vw}
+.warn{background:var(--sand);border-left:4px solid var(--coral);padding:10px 12px;border-radius:8px;font-size:13px}
+.fbtn{display:inline-flex;align-items:center;justify-content:center;margin:0;min-height:44px;padding:0 14px;border:1px solid var(--sea);border-radius:12px;background:#fff;color:var(--sea);font-size:14px;font-weight:800;cursor:pointer}.tb button{min-width:44px}.fig{margin:0;display:flex;flex-direction:column;gap:6px}.fig img,.fig video{max-width:100%;border-radius:12px;background:#000}.fig figcaption{font-size:13px;color:var(--mut)}
+.badge{text-align:center;font-size:12px;font-weight:700}.badge.lock{opacity:.4}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script type="application/json" id="seed">{"materi": [{"id": "struktur-atom", "versi": 1, "judul": "Struktur Atom", "jenjang": "SMA", "konteks": "Garam dari air laut Maluku", "viz": "atom", "tujuan": "Setelah belajar, kamu dapat:\n1. Menyebutkan partikel penyusun atom dan muatannya.\n2. Menentukan jumlah proton, neutron, dan elektron dari nomor atom dan nomor massa.\n3. Menjelaskan terbentuknya ion Na⁺ dan Cl⁻ dari konfigurasi elektronnya.", "fenomena": "Di pesisir Maluku, air laut dialirkan ke tambak lalu dijemur. Air menguap dan tersisa kristal garam putih. Air laut juga terasa asin dan dapat menghantarkan listrik, sedangkan kristal garam padat tidak.\nPertanyaan: partikel apa yang menyusun garam, dan dari mana asalnya?", "konsep": "Atom terdiri atas inti dan elektron.\n• Inti berisi proton (muatan +) dan neutron (tidak bermuatan).\n• Elektron (muatan −) berada di sekitar inti, pada kulit-kulit.\n• Nomor atom (Z) = jumlah proton. Pada atom netral, jumlah elektron = jumlah proton.\n• Nomor massa (A) = proton + neutron, sehingga neutron = A − Z.\n• Ion terbentuk ketika atom melepas atau menerima elektron. Jumlah proton tidak berubah.\n• Untuk unsur nomor atom 1–20, kulit pertama maksimal 2 elektron, kulit kedua 8, dan kulit ketiga 8.", "makro": "Yang dapat diamati dari garam dapur: kristal putih berbentuk kubus kecil, larut dalam air, dan terasa asin. Larutannya (seperti air laut) dapat menghantarkan listrik, sedangkan kristal padatnya tidak.", "submikro": "Kristal garam tersusun dari ion Na⁺ dan Cl⁻ yang tersusun teratur. Atom natrium (2, 8, 1) melepas 1 elektron menjadi Na⁺ (2, 8). Atom klor (2, 8, 7) menerima 1 elektron menjadi Cl⁻ (2, 8, 8). Ion berlawanan muatan saling tarik-menarik.\nDi dalam air, ion-ion itu bergerak bebas sehingga larutan menghantarkan listrik.\nCoba model di bawah: ubah jumlah elektron dan lihat muatannya.\nCatatan: model kulit ini disederhanakan. Elektron sebenarnya tidak mengorbit seperti planet, melainkan berada dalam orbital (awan elektron).", "simbolik": "Notasi atom: ²³₁₁Na berarti A = 23 dan Z = 11.\nProton = 11, elektron = 11, neutron = 23 − 11 = 12.\nPembentukan ion natrium: Na → Na⁺ + e⁻ (Na⁺: 11 proton, 10 elektron).\nPembentukan ion klorida: Cl + e⁻ → Cl⁻ (Cl: Z = 17, A = 35, neutron = 18; Cl⁻: 17 proton, 18 elektron).", "penerapan": "• Penggaraman ikan: garam digunakan untuk menghambat pertumbuhan mikroba pada ikan.\n• Korosi pada kapal: ion-ion terlarut dalam air laut membuat larutan menghantarkan listrik lebih baik, sehingga besi lebih cepat berkarat dibandingkan di air tawar.", "aktivitas": "Gunakan model atom pada bagian Submikroskopik:\n1. Pilih Na. Catat jumlah proton, neutron, dan elektron.\n2. Kurangi 1 elektron. Berapa muatannya? Bagaimana konfigurasinya?\n3. Pilih Cl, tambahkan 1 elektron, lalu bandingkan dengan Na⁺.\nBuka kembali Submikroskopik untuk mencoba.", "refleksi": "Dengan kata-katamu sendiri, jelaskan perbedaan atom Na dan ion Na⁺. Bagian mana yang masih membingungkan?", "soal": [{"id": "a1", "tipe": "pg", "teks": "Garam dapur tersusun dari ion Na⁺ dan Cl⁻. Nomor atom Na adalah 11. Berapa jumlah elektron atom Na yang netral?", "opsi": ["9 elektron", "10 elektron", "11 elektron", "12 elektron"], "kunci": 2, "bahas": "Pada atom netral, jumlah elektron sama dengan jumlah proton, yaitu sama dengan nomor atom: 11. Ion Na⁺ justru memiliki 10 elektron."}, {"id": "a2", "tipe": "pg", "teks": "Atom klor memiliki nomor atom 17 dan nomor massa 35. Berapa jumlah neutronnya?", "opsi": ["17", "18", "35", "52"], "kunci": 1, "bahas": "Neutron = nomor massa − nomor atom = 35 − 17 = 18."}, {"id": "a3", "tipe": "bs", "teks": "Ion Na⁺ memiliki 10 elektron.", "opsi": [], "kunci": true, "bahas": "Benar. Atom Na (11 elektron) melepas 1 elektron sehingga tersisa 10 elektron, sedangkan protonnya tetap 11."}, {"id": "a4", "tipe": "bs", "teks": "Neutron bermuatan negatif.", "opsi": [], "kunci": false, "bahas": "Salah. Neutron tidak bermuatan. Elektron yang bermuatan negatif, dan proton bermuatan positif."}, {"id": "a5", "tipe": "isian", "teks": "Ion yang terbentuk ketika atom klor menerima satu elektron ditulis: ... (contoh penulisan: Na+)", "opsi": [], "kunci": "Cl-", "bahas": "Atom klor menerima 1 elektron sehingga bermuatan −1: Cl⁻ (ion klorida). Kamu boleh menulisnya Cl- di keyboard."}, {"id": "a6", "tipe": "pg", "teks": "Air laut menghantarkan listrik, tetapi kristal garam padat tidak. Penjelasan submikroskopik yang paling tepat adalah ...", "opsi": ["Dalam air laut terdapat atom Na dan Cl netral yang bebas bergerak.", "Dalam air laut ion Na⁺ dan Cl⁻ bebas bergerak, sedangkan dalam kristal ion-ion terikat pada posisinya.", "Air laut mengandung elektron bebas dari atom natrium.", "Kristal garam tidak mengandung partikel bermuatan."], "kunci": 1, "bahas": "Kristal tersusun dari ion bermuatan, tetapi posisinya tetap sehingga tidak dapat mengalirkan muatan. Dalam larutan, ion bergerak bebas dan membawa muatan."}]}, {"id": "sistem-periodik", "versi": 1, "judul": "Sistem Periodik Unsur", "jenjang": "SMA", "konteks": "Unsur-unsur dalam air laut", "viz": "tabel", "tujuan": "Setelah belajar, kamu dapat:\n1. Menentukan golongan dan periode unsur nomor atom 1–20 dari konfigurasi elektronnya.\n2. Menjelaskan mengapa unsur segolongan memiliki sifat mirip.\n3. Menghubungkan ion-ion dalam air laut dengan letak unsurnya pada tabel periodik.", "fenomena": "Air laut mengandung natrium, klor, magnesium, kalsium, dan kalium. Natrium dan kalium sama-sama bereaksi hebat dengan air. Mengapa unsur-unsur berbeda dapat berperilaku mirip?", "konsep": "• Tabel periodik menyusun unsur menurut nomor atom.\n• Periode (baris) menunjukkan jumlah kulit yang terisi elektron.\n• Golongan (kolom) mengelompokkan unsur dengan jumlah elektron valensi yang sama (untuk golongan utama).\n• Elektron valensi adalah elektron pada kulit terluar. Golongan 1 punya 1, golongan 2 punya 2, dan golongan 13–18 punya (nomor golongan − 10).\n• Unsur segolongan memiliki sifat kimia yang mirip.", "makro": "Logam alkali (Li, Na, K) lunak dan mengilap, serta bereaksi dengan air menghasilkan gas hidrogen dan larutan basa. Reaksi ini berbahaya dan hanya boleh dilakukan guru atau laboran. Gas mulia (He, Ne, Ar) sangat sukar bereaksi.", "submikro": "Na (2, 8, 1) dan K (2, 8, 8, 1) sama-sama memiliki 1 elektron valensi yang mudah lepas. Elektron valensi K berada di kulit keempat, lebih jauh dari inti dibanding Na (kulit ketiga), sehingga lebih mudah dilepas. Klor (2, 8, 7) cenderung menerima 1 elektron.", "simbolik": "Na: konfigurasi 2, 8, 1 → periode 3, golongan 1.\nCl: konfigurasi 2, 8, 7 → periode 3, golongan 17 (valensi 7).\nCa: konfigurasi 2, 8, 8, 2 → periode 4, golongan 2.\nIon dalam air laut: Na⁺, K⁺, Mg²⁺, Ca²⁺, Cl⁻.", "penerapan": "Terumbu karang dan batu kapur tersusun terutama dari kalsium karbonat (CaCO₃). Kalsium (golongan 2) membentuk ion Ca²⁺, yang juga terdapat dalam air laut.", "aktivitas": "Gunakan tabel di bawah:\n1. Klik Na, K, dan Li. Apa kesamaan elektron valensinya?\n2. Klik Mg dan Ca. Di golongan berapa keduanya?\n3. Temukan lima unsur yang ditandai sebagai ion air laut.", "refleksi": "Mengapa unsur segolongan memiliki sifat yang mirip? Jelaskan dengan konsep elektron valensi.", "soal": [{"id": "p1", "tipe": "pg", "teks": "Unsur dengan konfigurasi elektron 2, 8, 2 terletak pada ...", "opsi": ["periode 2, golongan 3", "periode 3, golongan 2", "periode 2, golongan 2", "periode 3, golongan 3"], "kunci": 1, "bahas": "Tiga kulit terisi berarti periode 3. Dua elektron valensi berarti golongan 2 (unsur ini magnesium)."}, {"id": "p2", "tipe": "pg", "teks": "Atom klor memiliki konfigurasi elektron 2, 8, 7. Jumlah elektron valensinya adalah ...", "opsi": ["3", "5", "7", "17"], "kunci": 2, "bahas": "Elektron valensi adalah elektron pada kulit terluar, yaitu 7."}, {"id": "p3", "tipe": "bs", "teks": "Natrium dan kalium berada dalam satu golongan sehingga sifat kimianya mirip.", "opsi": [], "kunci": true, "bahas": "Benar. Keduanya golongan 1 dengan satu elektron valensi."}, {"id": "p4", "tipe": "isian", "teks": "Kalsium (nomor atom 20) berada pada golongan nomor ...", "opsi": [], "kunci": "2", "bahas": "Konfigurasinya 2, 8, 8, 2 sehingga memiliki 2 elektron valensi: golongan 2."}, {"id": "p5", "tipe": "pg", "teks": "Kalium bereaksi lebih hebat dengan air dibanding natrium. Penjelasan yang paling tepat adalah ...", "opsi": ["Kalium punya lebih banyak elektron valensi.", "Elektron valensi kalium berada lebih jauh dari inti sehingga lebih mudah dilepas.", "Kalium berada di periode yang lebih kecil.", "Kalium memiliki massa atom lebih kecil."], "kunci": 1, "bahas": "Keduanya punya 1 elektron valensi, tetapi pada kalium elektron itu di kulit keempat, lebih jauh dari inti dan lebih mudah lepas."}]}]}</script>
+<script>
+(function(){
+'use strict';
+var SEED=JSON.parse(document.getElementById('seed').textContent);
+var LS='kimiaku_v1',storageOk=true,mem=null;
+var $=function(s){return document.querySelector(s)};
+var esc=function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
+var fmt=function(s){return s.replace(/\*\*([^*\n]+)\*\*/g,'<b>$1</b>').replace(/\*([^*\n]+)\*/g,'<i>$1</i>').replace(/_\{([^}\n]+)\}/g,'<sub>$1</sub>').replace(/\^\{([^}\n]+)\}/g,'<sup>$1</sup>')};
+var para=function(t){return esc(t).split(/\n+/).filter(Boolean).map(function(p){return '<p>'+fmt(p)+'</p>'}).join('')};
+var uid=function(){return Math.random().toString(36).slice(2,8)+Date.now().toString(36).slice(-4)};
+var clone=function(x){return JSON.parse(JSON.stringify(x))};
+var today=function(){return new Date().toLocaleDateString('sv-SE')};
+var STEPS=[['tujuan','Tujuan Pembelajaran'],['fenomena','Fenomena Kontekstual'],['konsep','Penjelasan Konsep'],['makro','Makroskopik: yang kita amati'],['submikro','Submikroskopik: partikel'],['simbolik','Simbolik: rumus dan persamaan'],['penerapan','Contoh Penerapan'],['aktivitas','Aktivitas Interaktif'],['latihan','Latihan Soal dan Pembahasan'],['refleksi','Refleksi']];
+var FIELDS=[['tujuan','Tujuan pembelajaran'],['fenomena','Fenomena kontekstual'],['konsep','Penjelasan konsep'],['makro','Makroskopik (yang diamati)'],['submikro','Submikroskopik (partikel)'],['simbolik','Simbolik (rumus, persamaan)'],['penerapan','Contoh penerapan'],['aktivitas','Aktivitas interaktif (petunjuk)'],['refleksi','Pertanyaan refleksi']];
+var ICON={beranda:'M3 11l9-8 9 8v10h-6v-6H9v6H3z',belajar:'M4 5h6a2 2 0 012 2v12a2 2 0 00-2-2H4zM20 5h-6a2 2 0 00-2 2v12a2 2 0 012-2h6z',latihan:'M12 3a9 9 0 100 18 9 9 0 000-18zM8 12l3 3 5-6',progres:'M4 20V10M10 20V4M16 20v-8M22 20H2',lainnya:'M5 12h.01M12 12h.01M19 12h.01'};
+var NAVL={beranda:'Beranda',belajar:'Belajar',latihan:'Latihan',progres:'Progres',lainnya:'Lainnya'};
+var ELS=[[1,'H','Hidrogen',1,1,1],[2,'He','Helium',4,18,1],[3,'Li','Litium',7,1,2],[4,'Be','Berilium',9,2,2],[5,'B','Boron',11,13,2],[6,'C','Karbon',12,14,2],[7,'N','Nitrogen',14,15,2],[8,'O','Oksigen',16,16,2],[9,'F','Fluor',19,17,2],[10,'Ne','Neon',20,18,2],[11,'Na','Natrium',23,1,3],[12,'Mg','Magnesium',24,2,3],[13,'Al','Aluminium',27,13,3],[14,'Si','Silikon',28,14,3],[15,'P','Fosfor',31,15,3],[16,'S','Belerang',32,16,3],[17,'Cl','Klor',35,17,3],[18,'Ar','Argon',40,18,3],[19,'K','Kalium',39,1,4],[20,'Ca','Kalsium',40,2,4]];
+var SEA={Na:'Na⁺',K:'K⁺',Mg:'Mg²⁺',Ca:'Ca²⁺',Cl:'Cl⁻',S:'SO₄²⁻ (sulfat)'};
+
+/* ---------- media (gambar/video) ---------- */
+var MEDIA={},idb=null;
+function idbOpen(){return new Promise(function(res){try{var r=indexedDB.open('kimiaku_media',1);r.onupgradeneeded=function(){r.result.createObjectStore('m')};r.onsuccess=function(){res(r.result)};r.onerror=function(){res(null)};r.onblocked=function(){res(null)}}catch(e){res(null)}})}
+function idbLoad(){return new Promise(function(res){try{var c=idb.transaction('m').objectStore('m').openCursor();c.onsuccess=function(){var k=c.result;if(k){MEDIA[k.key]=k.value;k.continue()}else res()};c.onerror=function(){res()}}catch(e){res()}})}
+function mput(id,url){MEDIA[id]=url;if(!idb)return Promise.resolve(false);return new Promise(function(res){try{var tx=idb.transaction('m','readwrite');tx.objectStore('m').put(url,id);tx.oncomplete=function(){res(true)};tx.onerror=tx.onabort=function(){res(false)}}catch(e){res(false)}})}
+function mdelete(id){delete MEDIA[id];if(!idb)return;try{idb.transaction('m','readwrite').objectStore('m').delete(id)}catch(e){}}
+function usedMedia(list){var u={};list.forEach(function(m){var md=m.media||{};Object.keys(md).forEach(function(f){(md[f]||[]).forEach(function(x){if(x.t!=='url')u[x.id]=1})})});return u}
+function gcMedia(){var u=usedMedia(S.materi);Object.keys(MEDIA).forEach(function(k){if(!u[k])mdelete(k)})}
+function filesFor(list){var u=usedMedia(list),f={};Object.keys(u).forEach(function(k){if(MEDIA[k])f[k]=MEDIA[k]});return f}
+function readImage(file){return new Promise(function(res,rej){var u=URL.createObjectURL(file),im=new Image();im.onload=function(){var s=Math.min(1,900/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.max(1,Math.round(im.width*s));c.height=Math.max(1,Math.round(im.height*s));var x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);res(c.toDataURL('image/jpeg',0.8))};im.onerror=function(){URL.revokeObjectURL(u);rej()};im.src=u})}
+function addFile(inp){
+  var f=inp.files[0],fld=inp.dataset.uf,kind=inp.dataset.up;inp.value='';if(!f||!E)return;
+  E.media=E.media||{};
+  if((E.media[fld]||[]).length>=8){toast('Maksimal 8 media per bagian');return}
+  var done=function(url){var id=uid();mput(id,url).then(function(ok){(E.media[fld]=E.media[fld]||[]).push({id:id,t:kind,cap:''});if(!ok&&idb)toast('Penyimpanan media penuh atau gagal');render()})};
+  if(kind==='img'){if(f.size>20*1048576){toast('Gambar terlalu besar (maks 20 MB)');return}readImage(f).then(done,function(){toast('Gambar tidak dapat dibaca')})}
+  else{if(f.size>3*1048576){toast('Video terlalu besar (maks 3 MB). Perkecil videonya atau gunakan tautan video.');return}var r=new FileReader();r.onload=function(){var u=String(r.result);if(u.indexOf('data:video/')===0)done(u);else toast('Berkas bukan video')};r.readAsDataURL(f)}}
+function mediaHtml(m,f){
+  var L=(m.media&&m.media[f])||[];if(!L.length)return '';
+  return '<div style="display:flex;flex-direction:column;gap:12px">'+L.map(function(x){
+    if(x.t==='url')return '<a class="btn alt" style="display:flex;align-items:center;text-decoration:none;justify-content:center" href="'+esc(x.src)+'" target="_blank" rel="noopener">▶ Tonton video: '+esc(x.cap||x.src)+' (perlu internet)</a>';
+    var u=MEDIA[x.id];if(!u)return '<div class="warn">'+(x.t==='img'?'Gambar':'Video')+' belum ada di perangkat ini. Impor paket materi yang lengkap.</div>';
+    var cap=x.cap?'<figcaption>'+esc(x.cap)+'</figcaption>':'';
+    return x.t==='img'?'<figure class="fig"><img src="'+esc(u)+'" alt="'+esc(x.cap||'Gambar materi')+'">'+cap+'</figure>':'<figure class="fig"><video controls preload="metadata" playsinline src="'+esc(u)+'"></video>'+cap+'</figure>'}).join('')+'</div>'}
+function medEd(f){
+  var L=(E.media&&E.media[f])||[],id='f-'+f;
+  var h='<div class="row tb" style="margin-top:6px"><button class="btn alt sm" data-act="fmt" data-f="'+f+'" data-k="b" aria-label="Tebal"><b>B</b></button><button class="btn alt sm" data-act="fmt" data-f="'+f+'" data-k="i" aria-label="Miring"><i>I</i></button><button class="btn alt sm" data-act="fmt" data-f="'+f+'" data-k="sub" aria-label="Subskrip">x₂</button><button class="btn alt sm" data-act="fmt" data-f="'+f+'" data-k="sup" aria-label="Superskrip">x²</button>'
+  +['→','⇌','Δ','°','⁺','⁻','·'].map(function(s){return '<button class="btn alt sm" data-act="fmt" data-f="'+f+'" data-k="ins" data-s="'+s+'" aria-label="Sisipkan '+s+'">'+s+'</button>'}).join('')+'</div>'
+  +'<div class="row" style="margin-top:6px"><label class="fbtn">+ Gambar<input type="file" accept="image/*" data-up="img" data-uf="'+f+'" style="display:none"></label><label class="fbtn">+ Video<input type="file" accept="video/*" data-up="vid" data-uf="'+f+'" style="display:none"></label></div>'
+  +'<div class="row" style="margin-top:6px;flex-wrap:nowrap"><input type="text" data-urlf="'+f+'" placeholder="Tautan video https://… (perlu internet)" style="flex:1;min-width:0"><button class="btn alt sm" data-act="addurl" data-f="'+f+'">Tambah</button></div>';
+  L.forEach(function(x,i){var u=MEDIA[x.id];h+='<div class="row" style="margin-top:6px;flex-wrap:nowrap;align-items:center;background:#F2F9F9;border-radius:10px;padding:8px"><div style="flex:0 0 56px;height:44px;border-radius:8px;overflow:hidden;background:#DCEBEF;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700">'+(x.t==='img'&&u?'<img alt="" src="'+esc(u)+'" style="width:100%;height:100%;object-fit:cover">':x.t==='img'?'Gambar':x.t==='vid'?'Video':'Tautan')+'</div><input type="text" data-mc="'+f+'" data-mi="'+i+'" placeholder="Keterangan (opsional)" value="'+esc(x.cap)+'" style="flex:1;min-width:0"><button class="btn alt sm" data-act="mup" data-f="'+f+'" data-i="'+i+'" aria-label="Naikkan">↑</button><button class="btn alt sm" data-act="mdn" data-f="'+f+'" data-i="'+i+'" aria-label="Turunkan">↓</button><button class="btn danger sm" data-act="mdel" data-f="'+f+'" data-i="'+i+'" aria-label="Hapus media">✕</button></div>'});
+  return h}
+
+/* ---------- penyimpanan ---------- */
+function fresh(){return {profil:{nama:'',jenjang:'SMA'},materi:clone(SEED.materi),progres:{},benar:{},hist:[],poin:0,badges:[],hari:[],pin:null,last:null,mg:null,klaim:{},minggu:0,lv:1}}
+function load(){try{var r=localStorage.getItem(LS);if(r){var o=JSON.parse(r);if(o&&o.materi)return o}}catch(e){storageOk=false}return null}
+var S=load()||fresh();
+if(!S.klaim)S.klaim={};if(!S.minggu)S.minggu=0;
+function persist(){try{localStorage.setItem(LS,JSON.stringify(S));}catch(e){storageOk=false}}
+function mark(){var d=today();if(S.hari.indexOf(d)<0){S.hari.push(d);}ensureWeek();S.mg.hari[d]=1;persist()}
+function visit(m,i){var p=prog(m);if(!p.v[i]){p.v[i]=1;award(5)}ensureWeek();S.mg.bs[m+':'+i]=1;S.last=m;mark()}
+function getM(id){return S.materi.filter(function(m){return m.id===id})[0]}
+function prog(id){return S.progres[id]||(S.progres[id]={v:{},best:null,refl:''})}
+function pct(id){var p=S.progres[id];return p?Math.round(Object.keys(p.v).length/STEPS.length*100):0}
+var LV=[0,100,250,450,700,1000,1400,1900,2500],LVN=['Tiram Muda','Ikan Karang','Penyelam','Pelaut','Nahkoda','Penjelajah Samudra','Penjaga Terumbu','Ahli Kimia Laut','Maestro Samudra'];
+function level(){var l=1;for(var i=0;i<LV.length;i++)if(S.poin>=LV[i])l=i+1;return l}
+function lvName(l){return LVN[Math.min(l,LVN.length)-1]}
+function lvPct(){var l=level();if(l>=LV.length)return 100;return Math.round((S.poin-LV[l-1])/(LV[l]-LV[l-1])*100)}
+function lvLeft(){var l=level();return l>=LV.length?0:LV[l]-S.poin}
+function dstr(d){return d.toLocaleDateString('sv-SE')}
+function streak(){var set={};S.hari.forEach(function(x){set[x]=1});var d=new Date();if(!set[dstr(d)]){d.setDate(d.getDate()-1);if(!set[dstr(d)])return 0}var n=0;while(set[dstr(d)]){n++;d.setDate(d.getDate()-1)}return n}
+function isoWeek(d){var t=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));var day=t.getUTCDay()||7;t.setUTCDate(t.getUTCDate()+4-day);var y=t.getUTCFullYear();var w=Math.ceil(((t-Date.UTC(y,0,1))/864e5+1)/7);return {key:y+'-W'+(w<10?'0':'')+w,idx:y*53+w}}
+function ensureWeek(){var w=isoWeek(new Date());if(!S.mg||S.mg.k!==w.key)S.mg={k:w.key,benar:0,bs:{},k80:0,hari:{},rf:{}};if(!S.mg.hari)S.mg.hari={};return w}
+var POOL=[{id:'benar',t:'Jawab 15 soal dengan benar',n:15,v:function(){return S.mg.benar}},{id:'bagian',t:'Buka 10 bagian materi yang berbeda',n:10,v:function(){return Object.keys(S.mg.bs).length}},{id:'k80',t:'Raih skor 80% ke atas pada 2 latihan',n:2,v:function(){return S.mg.k80}},{id:'hari',t:'Belajar di 4 hari yang berbeda',n:4,v:function(){return Object.keys(S.mg.hari).length}},{id:'refl',t:'Tulis 2 refleksi materi',n:2,v:function(){return Object.keys(S.mg.rf).length}}];
+function weekTasks(){var w=ensureWeek(),s=w.idx%POOL.length;return [POOL[s],POOL[(s+1)%POOL.length],POOL[(s+2)%POOL.length]]}
+function weekDone(){var ts=weekTasks();return ts.filter(function(x){return x.v()>=x.n}).length}
+function daysLeft(){var d=new Date();return 7-(d.getDay()||7)}
+function award(n){S.poin+=n}
+
+/* ---------- normalisasi paket ---------- */
+function str(x,n){return String(x==null?'':x).slice(0,n||4000)}
+function normMateri(m){
+  var o={id:str(m.id,60)||uid(),versi:Number(m.versi)||1,judul:str(m.judul,120),jenjang:m.jenjang==='Mahasiswa'?'Mahasiswa':'SMA',konteks:str(m.konteks,160),viz:(m.viz==='atom'||m.viz==='tabel')?m.viz:'',soal:[]};
+  FIELDS.forEach(function(f){o[f[0]]=str(m[f[0]])});
+  o.media={};var md=m.media&&typeof m.media==='object'?m.media:{};
+  FIELDS.forEach(function(f){var L=Array.isArray(md[f[0]])?md[f[0]].slice(0,8):[],R=[];L.forEach(function(x){if(!x)return;var tp=x.t==='vid'?'vid':x.t==='url'?'url':'img',it={id:str(x.id,40)||uid(),t:tp,cap:str(x.cap,200)};if(tp==='url'){if(!/^https:\/\//.test(String(x.src||'')))return;it.src=str(x.src,500)}R.push(it)});if(R.length)o.media[f[0]]=R});
+  (Array.isArray(m.soal)?m.soal:[]).slice(0,60).forEach(function(s){
+    var t=s.tipe==='bs'||s.tipe==='isian'?s.tipe:'pg';
+    var q={id:str(s.id,40)||uid(),tipe:t,teks:str(s.teks,800),bahas:str(s.bahas,1200),opsi:[],kunci:null};
+    if(t==='pg'){var op=Array.isArray(s.opsi)?s.opsi.slice(0,4).map(function(x){return str(x,300)}):[];while(op.length<4)op.push('');q.opsi=op;var k=Number(s.kunci);q.kunci=(k>=0&&k<4)?Math.floor(k):0}
+    else if(t==='bs'){q.kunci=s.kunci===true}
+    else q.kunci=str(s.kunci,200);
+    o.soal.push(q)});
+  return o}
+function importData(txt){
+  var o;try{o=JSON.parse(txt)}catch(e){return 'Berkas tidak dapat dibaca. Pastikan isinya utuh.'}
+  if(!o||typeof o!=='object')return 'Format berkas tidak dikenali.';
+  if(o.kimiaku==='paket'&&Array.isArray(o.materi)){var a=0,b=0;if(o.files&&typeof o.files==='object')Object.keys(o.files).slice(0,200).forEach(function(k){var v=o.files[k];if(typeof v==='string'&&/^data:(image|video)\//.test(v)&&v.length<9000000)mput(str(k,40),v)});o.materi.slice(0,50).forEach(function(m){if(!m||!str(m.judul))return;var n=normMateri(m),i=S.materi.findIndex(function(x){return x.id===n.id});if(i>=0){S.materi[i]=n;b++}else{S.materi.push(n);a++}});persist();return 'Selesai: '+a+' materi baru, '+b+' diperbarui.'}
+  if(o.kimiaku==='progres'&&o.data){var d=o.data;S.profil={nama:str(d.profil&&d.profil.nama,60),jenjang:d.profil&&d.profil.jenjang==='Mahasiswa'?'Mahasiswa':'SMA'};S.progres=d.progres&&typeof d.progres==='object'?d.progres:{};S.benar=d.benar||{};S.hist=Array.isArray(d.hist)?d.hist.slice(-200):[];S.poin=Number(d.poin)||0;S.badges=Array.isArray(d.badges)?d.badges:[];S.hari=Array.isArray(d.hari)?d.hari:[];persist();return 'Progres berhasil dipulihkan.'}
+  return 'Format berkas tidak dikenali.'}
+
+/* ---------- unduh / salin ---------- */
+var modal=null,toastMsg='',toastT=null;
+function toast(m){toastMsg=m;clearTimeout(toastT);toastT=setTimeout(function(){toastMsg='';render()},3200);render()}
+async function saveFile(name,data){
+  var dl=null;try{if(typeof claude!=='undefined')dl=await claude.use('downloads')}catch(e){}
+  if(dl){try{await dl.save({filename:name,data:data});toast('Berkas diproses: '+name);return}catch(e){if(e&&e.code==='declined')return}}
+  if(typeof claude==='undefined'){var a=document.createElement('a');try{var u=URL.createObjectURL(new Blob([data],{type:'application/octet-stream'}));a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();toast('Berkas diunduh: '+name);return}catch(e){}}
+  modal={t:'teks',name:name,data:data};render()}
+function offlineHtml(){var c=document.documentElement.cloneNode(true);c.querySelector('#app').innerHTML='';c.querySelector('#seed').textContent=JSON.stringify({materi:S.materi,files:filesFor(S.materi)}).replace(/</g,'\\u003c');return '<!DOCTYPE html>\n'+c.outerHTML}
+
+/* ---------- lencana ---------- */
+var BADGES=[
+['atom','Penjelajah Atom','Buka 5 bagian materi',function(){return Object.keys(S.progres).some(function(k){return Object.keys(S.progres[k].v).length>=5})},'#1B6CA0'],
+['garam','Pelaut Garam','Skor latihan 80% ke atas',function(){return S.hist.some(function(h){return h.skor>=80})},'#0E7C7B'],
+['sempurna','Nilai Sempurna','Skor latihan 100%',function(){return S.hist.some(function(h){return h.skor>=100})},'#E8604C'],
+['tuntas','Penuntas Materi','Selesaikan semua bagian satu materi',function(){return Object.keys(S.progres).some(function(k){return S.progres[k].done})},'#7A4B00'],
+['rajin','Rajin 3 Hari','Belajar 3 hari berturut-turut',function(){return streak()>=3},'#1B6CA0'],
+['rajin7','Rajin 7 Hari','Belajar 7 hari berturut-turut',function(){return streak()>=7},'#0A2F4A'],
+['mingguan','Penantang Mingguan','Selesaikan satu tantangan mingguan',function(){return S.minggu>=1},'#0E7C7B']];
+var evalBusy=false;
+function evalAll(){
+  if(evalBusy)return;evalBusy=true;var msgs=[];ensureWeek();
+  var ts=weekTasks();if(ts.every(function(x){return x.v()>=x.n})&&!S.klaim[S.mg.k]){S.klaim[S.mg.k]=1;S.minggu++;award(100);msgs.push('Tantangan mingguan selesai! +100 poin')}
+  BADGES.forEach(function(b){if(S.badges.indexOf(b[0])<0&&b[3]()){S.badges.push(b[0]);msgs.push('Lencana baru: '+b[1])}});
+  var l=level();if(!S.lv)S.lv=l;if(l>S.lv){msgs.push('Naik ke Level '+l+': '+lvName(l));S.lv=l}else if(l<S.lv)S.lv=l;
+  persist();evalBusy=false;if(msgs.length)toast(msgs.join(' · '))}
+function evalBadges(){evalAll()}
+
+/* ---------- state tampilan ---------- */
+var V={name:'splash'},Q=null,E=null,AV={z:11,e:11},PT={z:11},pinOK=false;
+function activeNav(){var n=V.name;return {materi:'belajar',quiz:'latihan',hasil:'latihan',tantangan:'progres',pengelola:'lainnya',editor:'lainnya',pengaturan:'lainnya',tentang:'lainnya'}[n]||n}
+function head(t,sub){return '<div class="hd"><div style="font-size:13px;color:#CFE9EE">'+esc(sub||'')+'</div><h2>'+t+'</h2></div><svg class="wave" viewBox="0 0 390 36" preserveAspectRatio="none" aria-hidden="true"><path d="M0 18 C60 0 120 36 195 18 S330 0 390 18 V36 H0Z" fill="#F2F9F9"/></svg>'}
+
+/* ---------- visualisasi ---------- */
+function shells(n){var caps=[2,8,8,2],r=[];for(var i=0;i<caps.length&&n>0;i++){var k=Math.min(caps[i],n);r.push(k);n-=k}return r}
+function charge(c){return c===0?'':(c>0?(c>1?c:'')+'⁺'.replace('⁺','<sup>'+(c>1?c:'')+'+</sup>'):'<sup>'+(c<-1?-c:'')+'−</sup>')}
+function atomBody(){
+  var el=ELS[AV.z-1],e=AV.e,ch=AV.z-e,sh=shells(e),n=el[3]-el[0],R=[26,48,70,92],s='';
+  s+='<svg viewBox="0 0 240 240" width="240" height="240" role="img" aria-label="Model kulit '+esc(el[2])+' dengan '+e+' elektron" style="max-width:100%;height:auto">';
+  for(var i=0;i<Math.max(sh.length,1);i++)s+='<circle cx="120" cy="120" r="'+R[i]+'" fill="none" stroke="#9CC3D0"/>';
+  s+='<circle cx="120" cy="120" r="13" fill="#E8604C"/><text x="120" y="124" text-anchor="middle" font-size="11" font-weight="700" fill="#0A2F4A">'+el[1]+'</text>';
+  sh.forEach(function(k,i){for(var j=0;j<k;j++){var a=-Math.PI/2+2*Math.PI*j/k;s+='<circle cx="'+(120+R[i]*Math.cos(a)).toFixed(1)+'" cy="'+(120+R[i]*Math.sin(a)).toFixed(1)+'" r="5" fill="#1B6CA0"/>'}});
+  s+='</svg>';
+  var cs=ch===0?'netral (0)':(ch>0?'+'+ch:'−'+(-ch));
+  return '<div class="row" style="justify-content:center">'+['Na','Cl','Mg','Ca','K','O'].map(function(x){var z=ELS.filter(function(y){return y[1]===x})[0][0];return '<button class="btn alt sm" data-act="az" data-z="'+z+'">'+x+'</button>'}).join('')+'</div>'
+  +s
+  +'<div class="row" style="justify-content:center"><button class="btn alt sm" data-act="ae" data-d="-1" aria-label="Kurangi satu elektron">− elektron</button><b>'+e+' elektron</b><button class="btn alt sm" data-act="ae" data-d="1" aria-label="Tambah satu elektron">+ elektron</button></div>'
+  +'<table class="t"><tr><td>Notasi</td><td><b><span class="nuc"><span>'+el[3]+'</span><span>'+el[0]+'</span></span>'+el[1]+(ch?'<sup>'+(Math.abs(ch)>1?Math.abs(ch):'')+(ch>0?'+':'−')+'</sup>':'')+'</b></td></tr><tr><td>Proton</td><td><b>'+el[0]+'</b></td></tr><tr><td>Neutron (A − Z)</td><td><b>'+n+'</b></td></tr><tr><td>Elektron</td><td><b>'+e+'</b></td></tr><tr><td>Muatan</td><td><b>'+cs+'</b></td></tr><tr><td>Konfigurasi kulit</td><td><b>'+(sh.join(', ')||'-')+'</b></td></tr></table>'
+  +'<div style="font-size:12px;color:var(--mut)">Model kulit disederhanakan untuk unsur nomor atom 1–20. Nomor massa adalah isotop paling melimpah.</div>'}
+function atomViz(){var el=ELS[AV.z-1];return '<div class="card" style="display:flex;flex-direction:column;gap:12px"><div><label for="zr">Nomor atom (Z): <span id="zl">'+el[0]+' · '+esc(el[2])+'</span></label><input id="zr" type="range" min="1" max="20" value="'+AV.z+'" style="width:100%;min-height:44px"></div><div id="vizbody" style="display:flex;flex-direction:column;gap:12px;align-items:center;width:100%">'+atomBody()+'</div></div>'}
+function pos(z){var p=ELS[z-1];var col=p[4]>=13?p[4]:p[4];return [p[5],col]}
+function tableViz(){
+  var cells='';ELS.forEach(function(p){var g=p[4]===1&&p[0]>1?'g1':p[4]===2?'g2':p[4]===17?'g17':p[4]===18?'g18':'';cells+='<button class="el '+g+(SEA[p[1]]?' sea':'')+(PT.z===p[0]?' sel':'')+'" style="grid-row:'+p[5]+';grid-column:'+p[4]+'" data-act="pz" data-z="'+p[0]+'" aria-label="'+esc(p[2])+'">'+p[1]+'<small>'+p[0]+'</small></button>'});
+  var p=ELS[PT.z-1],sh=shells(p[0]),val=sh[sh.length-1];
+  return '<div class="card" style="display:flex;flex-direction:column;gap:10px"><div class="ptab"><div class="pt">'+cells+'</div></div>'
+  +'<div style="font-size:12px;color:var(--mut)">Garis tebal biru tua: unsur yang ada sebagai ion dalam air laut. Warna: golongan 1 (hijau muda), 2 (biru muda), 17 (merah muda), 18 (krem). Unsur 1–20 saja.</div>'
+  +'<table class="t"><tr><td>Unsur</td><td><b>'+esc(p[2])+' ('+p[1]+')</b></td></tr><tr><td>Nomor atom</td><td><b>'+p[0]+'</b></td></tr><tr><td>Periode / golongan</td><td><b>'+p[5]+' / '+p[4]+'</b></td></tr><tr><td>Konfigurasi kulit</td><td><b>'+sh.join(', ')+'</b></td></tr><tr><td>Elektron valensi</td><td><b>'+val+'</b></td></tr><tr><td>Dalam air laut</td><td><b>'+(SEA[p[1]]?'Ya, sebagai '+SEA[p[1]]:'Bukan komponen utama')+'</b></td></tr></table></div>'}
+
+/* ---------- tampilan ---------- */
+function vSplash(){return '<div style="min-height:100vh;background:var(--navy);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:32px;text-align:center"><svg width="110" height="110" viewBox="0 0 120 120" fill="none" stroke="#7FD6CF" stroke-width="3" aria-hidden="true"><ellipse cx="60" cy="60" rx="52" ry="20"/><ellipse cx="60" cy="60" rx="52" ry="20" transform="rotate(60 60 60)"/><ellipse cx="60" cy="60" rx="52" ry="20" transform="rotate(120 60 60)"/><circle cx="60" cy="60" r="9" fill="#F6EEDD" stroke="none"/></svg><h1 style="margin:0;font-size:40px;letter-spacing:1px">KIMIAKU</h1><p style="margin:0;color:#CFE9EE">Belajar kimia dari laut kita</p><button class="btn" style="background:#F6EEDD;color:var(--navy);margin-top:18px;border-radius:26px;min-height:52px;padding:0 40px" data-act="start">Mulai Belajar</button><p style="font-size:13px;color:#9FC6D2;margin:0">Materi dasar tanpa login · tersimpan di perangkat</p></div>'}
+function vWelcome(){return head('Selamat datang','KIMIAKU')+'<div class="pad"><div class="card" style="display:flex;flex-direction:column;gap:12px"><div><label for="nm">Nama panggilan</label><input id="nm" type="text" maxlength="40" placeholder="contoh: Rafi" value="'+esc(S.profil.nama)+'"></div><div><label for="jj">Jenjang</label><select id="jj"><option'+(S.profil.jenjang==='SMA'?' selected':'')+'>SMA</option><option'+(S.profil.jenjang==='Mahasiswa'?' selected':'')+'>Mahasiswa</option></select></div><button class="btn" data-act="mulai">Masuk</button><div style="font-size:13px;color:var(--mut)">Tidak perlu akun. Nama hanya disimpan di perangkat ini.</div></div></div>'}
+function statusPill(){return navigator.onLine?'<span class="pill on">Online</span>':'<span class="pill off">Offline · data di perangkat</span>'}
+function vBeranda(){
+  var last=S.last&&getM(S.last)||S.materi[0],h='';
+  var rec=S.materi.filter(function(m){return m.id!==(last&&last.id)}).sort(function(a,b){return pct(a.id)-pct(b.id)})[0];
+  h+=head('Halo, '+esc(S.profil.nama||'Pelajar'),'Selamat belajar')+'<div class="pad"><div class="row" style="justify-content:space-between">'+statusPill()+'<span style="font-size:13px;color:var(--mut)">'+esc(S.profil.jenjang)+'</span></div>';
+  if(!storageOk)h+='<div class="warn">Penyimpanan peramban tidak tersedia. Progres bisa hilang saat halaman ditutup. Gunakan Cadangkan progres di Pengaturan.</div>';
+  if(last)h+='<div class="card" style="display:flex;flex-direction:column;gap:10px"><div class="tag">LANJUTKAN BELAJAR</div><h3>'+esc(last.judul)+'</h3><div style="font-size:14px;color:var(--mut)">'+pct(last.id)+'% selesai · '+esc(last.konteks)+'</div><div class="bar2"><i style="width:'+pct(last.id)+'%"></i></div><button class="btn" data-act="buka" data-m="'+esc(last.id)+'">Lanjutkan</button></div>';
+  h+='<div class="grid3"><div class="stat"><b>'+S.poin+'</b><span>Poin</span></div><div class="stat"><b>'+level()+'</b><span>Level · '+esc(lvName(level()))+'</span></div><div class="stat"><b>'+streak()+'</b><span>Hari beruntun</span></div></div>';
+  var wd=weekDone(),dl=daysLeft();
+  h+='<button class="lnk" data-act="go" data-v="tantangan" style="background:var(--navy);color:#fff;border:0"><span style="font-size:13px;font-weight:700;color:#7FD6CF">TANTANGAN MINGGU INI</span><b style="font-size:17px">'+wd+' dari 3 tugas selesai</b><div class="bar2" style="background:#1E4A68"><i style="width:'+Math.round(wd/3*100)+'%;background:#7FD6CF"></i></div><span style="font-size:13px;color:#CFE9EE">'+(S.klaim[S.mg.k]?'Hadiah +100 poin sudah diterima':(dl===0?'Berakhir hari ini · hadiah +100 poin':'Sisa '+dl+' hari · hadiah +100 poin'))+'</span></button>';
+  if(rec)h+='<h3>Rekomendasi untukmu</h3><button class="lnk" style="background:var(--sand);border:0" data-act="buka" data-m="'+esc(rec.id)+'"><b>'+esc(rec.judul)+'</b><span style="font-size:14px">'+esc(rec.konteks)+'</span></button>';
+  return h+'</div>'}
+function vBelajar(){
+  var j=V.jenjang||S.profil.jenjang;
+  var h=head('Belajar','Pilih jenjang dan materi')+'<div class="pad"><div class="row"><button class="btn sm'+(j==='SMA'?'':' alt')+'" data-act="jenjang" data-j="SMA">SMA</button><button class="btn sm'+(j==='Mahasiswa'?'':' alt')+'" data-act="jenjang" data-j="Mahasiswa">Mahasiswa</button></div>';
+  var ls=S.materi.filter(function(m){return m.jenjang===j});
+  if(!ls.length)h+='<div class="card">Belum ada materi untuk jenjang ini. Guru atau dosen dapat menambahkannya di Mode Pengelola, atau mengimpor paket materi.</div>';
+  ls.forEach(function(m){h+='<button class="lnk" data-act="buka" data-m="'+esc(m.id)+'"><h3>'+esc(m.judul)+'</h3><span style="font-size:14px;color:var(--mut)">'+esc(m.konteks)+'</span><span class="tag">Tersimpan di perangkat · '+pct(m.id)+'% selesai · '+m.soal.length+' soal</span></button>'});
+  return h+'</div>'}
+function vMateri(){
+  var m=getM(V.m);if(!m)return vBelajar();
+  var i=V.step||0,st=STEPS[i],p=prog(m.id),h='<div class="pad">';
+  if(st[0]!=='latihan')visit(m.id,i);
+  h+='<button class="back" data-act="go" data-v="belajar">← Daftar materi</button><h2>'+esc(m.judul)+'</h2><div style="font-size:13px;color:var(--mut)">Bagian '+(i+1)+' dari '+STEPS.length+' · '+esc(m.konteks)+'</div>';
+  h+='<div class="steps">'+STEPS.map(function(x,k){return '<i class="'+(k===i?'c':p.v[k]?'v':'')+'"></i>'}).join('')+'</div>';
+  h+='<h3>'+st[1]+'</h3>';
+  if(st[0]==='latihan'){
+    h+='<div class="card"><p style="margin:0 0 10px">'+m.soal.length+' soal dengan pembahasan.'+(p.best!=null?' Skor terbaik: <b>'+p.best+'%</b>.':'')+'</p>'+(m.soal.length?'<button class="btn teal" data-act="qstart" data-m="'+esc(m.id)+'">Mulai latihan</button>':'<span>Belum ada soal pada materi ini.</span>')+'</div>'}
+  else if(st[0]==='refleksi'){
+    h+='<div class="sand txt">'+para(m.refleksi)+'</div>'+mediaHtml(m,'refleksi')+'<div><label for="refl">Jawabanmu (tersimpan di perangkat)</label><textarea id="refl">'+esc(p.refl||'')+'</textarea></div><button class="btn" data-act="selesai" data-m="'+esc(m.id)+'">Selesai</button>'}
+  else{
+    var cls=st[0]==='fenomena'?'sand':'card';
+    h+='<div class="'+cls+' txt">'+para(m[st[0]]||'(belum diisi)')+'</div>'+mediaHtml(m,st[0]);
+    if(st[0]==='submikro'&&m.viz==='atom')h+='<div id="viz">'+atomViz()+'</div>';
+    if(st[0]==='aktivitas'&&m.viz==='tabel')h+='<div id="viz">'+tableViz()+'</div>';
+  }
+  h+='<div class="row" style="justify-content:space-between"><button class="btn alt sm" data-act="step" data-i="'+(i-1)+'"'+(i===0?' disabled style="visibility:hidden"':'')+'>← Sebelumnya</button>'+(i<STEPS.length-1?'<button class="btn sm" data-act="step" data-i="'+(i+1)+'">Lanjut →</button>':'')+'</div></div>';
+  return h}
+function vLatihan(){var h=head('Latihan','Pilih materi')+'<div class="pad">';S.materi.forEach(function(m){var p=S.progres[m.id];h+='<button class="lnk" data-act="qstart" data-m="'+esc(m.id)+'"><h3>'+esc(m.judul)+'</h3><span class="tag">'+m.soal.length+' soal'+(p&&p.best!=null?' · skor terbaik '+p.best+'%':'')+'</span></button>'});if(!S.materi.length)h+='<div class="card">Belum ada materi.</div>';return h+'</div>'}
+function vQuiz(){
+  var m=getM(Q.mid),s=m.soal[Q.i],h='<div class="pad"><div class="row" style="justify-content:space-between;font-weight:700;font-size:14px"><span>Soal '+(Q.i+1)+' dari '+m.soal.length+'</span><span class="tag">'+({pg:'Pilihan ganda',bs:'Benar / Salah',isian:'Isian singkat'})[s.tipe]+'</span></div><div class="bar2"><i style="width:'+Math.round(Q.i/m.soal.length*100)+'%"></i></div><div class="card">'+para(s.teks)+'</div>';
+  var fb=Q.fb;
+  if(s.tipe==='pg')s.opsi.forEach(function(o,k){var c=fb?(k===s.kunci?'ok':(k===Q.sel?'no':'')):'';h+='<button class="opt '+c+'" data-act="qpick" data-k="'+k+'"'+(fb?' disabled':'')+'><span>'+esc(o)+'</span><span style="font-size:12px;font-weight:800">'+(fb?(k===s.kunci?'Benar':(k===Q.sel?'Kurang tepat':'')):'')+'</span></button>'});
+  else if(s.tipe==='bs')[[true,'Benar'],[false,'Salah']].forEach(function(o){var c=fb?(o[0]===s.kunci?'ok':(o[0]===Q.sel?'no':'')):'';h+='<button class="opt '+c+'" data-act="qpick" data-k="'+o[0]+'"'+(fb?' disabled':'')+'><span>'+o[1]+'</span><span style="font-size:12px;font-weight:800">'+(fb?(o[0]===s.kunci?'Benar':(o[0]===Q.sel?'Kurang tepat':'')):'')+'</span></button>'});
+  else{h+='<div><label for="isi">Jawabanmu</label><input id="isi" type="text" '+(fb?'disabled value="'+esc(Q.sel)+'"':'')+' autocomplete="off"></div>';if(!fb)h+='<button class="btn" data-act="qisi">Periksa</button>'}
+  if(fb){h+='<div class="card" style="background:#EAF6F6"><b>'+(Q.ok?'Tepat.':'Belum tepat.')+' Pembahasan.</b> '+esc(s.bahas||'-')+(s.tipe==='isian'&&!Q.ok?'<br><b>Jawaban: '+esc(String(s.kunci).split('|')[0])+'</b>':'')+'</div><button class="btn" data-act="qnext">'+(Q.i+1<m.soal.length?'Soal berikutnya':'Lihat hasil')+'</button>'}
+  return h+'</div>'}
+function vHasil(){
+  var m=getM(Q.mid),ok=Q.res.filter(Boolean).length,sk=Math.round(ok/m.soal.length*100);
+  var h=head('Hasil Latihan',m.judul)+'<div class="pad"><div class="card" style="background:var(--navy);color:#fff;text-align:center"><div style="font-size:46px;font-weight:800">'+ok+'/'+m.soal.length+'</div><div style="color:#CFE9EE">Skor '+sk+'% · tersimpan di perangkat</div></div><h3>Pembahasan</h3>';
+  m.soal.forEach(function(s,k){h+='<div class="card"><div class="tag">Soal '+(k+1)+' · '+(Q.res[k]?'Benar':'Perlu diperkuat')+'</div>'+para(s.teks)+'<div style="background:#EAF6F6;border-radius:10px;padding:10px;font-size:14px"><b>Pembahasan.</b> '+esc(s.bahas||'-')+'</div></div>'});
+  return h+'<div class="row"><button class="btn" data-act="qstart" data-m="'+esc(m.id)+'">Ulangi</button><button class="btn alt" data-act="buka" data-m="'+esc(m.id)+'">Tinjau materi</button></div></div>'}
+function vProgres(){
+  var nm=S.profil.nama||'Pelajar',l=level(),h=head('Progres Belajar','Profil')+'<div class="pad"><div class="card"><h3>'+esc(nm)+' · '+esc(S.profil.jenjang)+'</h3><div style="font-size:14px;color:var(--mut)">Level '+l+' · '+esc(lvName(l))+' · '+S.poin+' poin</div><div class="bar2" style="margin-top:8px"><i style="width:'+lvPct()+'%;background:var(--teal)"></i></div><div style="font-size:12px;color:var(--mut)">'+(lvLeft()?lvLeft()+' poin lagi menuju level '+(l+1)+': '+esc(lvName(l+1)):'Level tertinggi tercapai')+'</div><div class="row" style="margin-top:10px"><span class="pill on">Hari beruntun: '+streak()+'</span><span class="pill on">Tantangan selesai: '+S.minggu+'</span></div></div><button class="btn teal" data-act="go" data-v="tantangan">Lihat tantangan mingguan</button><h3>Lencana ('+S.badges.length+' dari '+BADGES.length+')</h3><div class="grid3">';
+  BADGES.forEach(function(b){var on=S.badges.indexOf(b[0])>=0;h+='<div class="stat badge'+(on?'':' lock')+'"><svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="'+b[4]+'"/>'+(on?'<path d="M12 21l6 6 11-12" stroke="#fff" stroke-width="3" fill="none"/>':'')+'</svg><div>'+b[1]+'</div><div style="font-weight:400;color:var(--mut)">'+(on?'Diraih':b[2])+'</div></div>'});
+  h+='</div><h3>Per materi</h3>';
+  S.materi.forEach(function(m){var p=S.progres[m.id];h+='<div class="card"><div class="row" style="justify-content:space-between"><b>'+esc(m.judul)+'</b><span class="tag">'+pct(m.id)+'%</span></div><div class="bar2"><i style="width:'+pct(m.id)+'%"></i></div><div style="font-size:13px;color:var(--mut);margin-top:6px">Skor terbaik: '+(p&&p.best!=null?p.best+'%':'belum ada')+'</div></div>'});
+  return h+'</div>'}
+function vTantangan(){
+  var ts=weekTasks(),wd=weekDone(),dl=daysLeft(),w=S.mg.k;
+  var h=head('Tantangan Mingguan','Minggu '+w.slice(-2)+' · '+(dl===0?'berakhir hari ini':'sisa '+dl+' hari'))+'<div class="pad"><button class="back" data-act="go" data-v="progres">← Progres</button>';
+  h+='<div class="card" style="background:var(--navy);color:#fff"><b style="font-size:20px">'+wd+' dari 3 tugas selesai</b><div class="bar2" style="background:#1E4A68;margin:8px 0"><i style="width:'+Math.round(wd/3*100)+'%;background:#7FD6CF"></i></div><span style="font-size:14px;color:#CFE9EE">'+(S.klaim[w]?'Selamat! Hadiah +100 poin dan kemajuan lencana sudah diterima.':'Selesaikan ketiganya sebelum Minggu malam untuk hadiah +100 poin.')+'</span></div>';
+  ts.forEach(function(x){var v=Math.min(x.v(),x.n),ok=v>=x.n;h+='<div class="card"><div class="row" style="justify-content:space-between"><b>'+esc(x.t)+'</b><span class="pill '+(ok?'on':'off')+'">'+(ok?'Selesai':v+' / '+x.n)+'</span></div><div class="bar2" style="margin-top:8px"><i style="width:'+Math.round(v/x.n*100)+'%;background:'+(ok?'var(--teal)':'var(--sea)')+'"></i></div></div>'});
+  h+='<div class="sand txt"><b>Cara mendapat poin</b><p style="margin:6px 0 0">+10 untuk setiap soal yang pertama kali dijawab benar<br>+5 untuk setiap bagian materi yang pertama kali dibuka<br>+20 untuk skor latihan 100%<br>+50 untuk menyelesaikan satu materi<br>+100 untuk menyelesaikan tantangan mingguan</p></div><div style="font-size:12px;color:var(--mut)">Tantangan berganti otomatis setiap Senin dan dihitung di perangkat ini, sehingga tetap berjalan tanpa internet.</div></div>';
+  return h}
+function vLainnya(){return head('Lainnya','Pengelolaan dan pengaturan')+'<div class="pad"><button class="lnk" data-act="go" data-v="pengelola"><b>Mode Pengelola (guru/dosen)</b><span style="font-size:13px;color:var(--mut)">Tambah, ubah, hapus materi dan soal. Ekspor/impor paket.</span></button><button class="lnk" data-act="go" data-v="pengaturan"><b>Pengaturan dan Unduhan Offline</b><span style="font-size:13px;color:var(--mut)">Profil, cadangan progres, aplikasi offline.</span></button><button class="lnk" data-act="go" data-v="tentang"><b>Tentang KIMIAKU</b></button></div>'}
+function vTentang(){return '<div class="pad"><button class="back" data-act="go" data-v="lainnya">← Lainnya</button><h2>Tentang KIMIAKU</h2><div class="card txt"><p>KIMIAKU adalah aplikasi belajar kimia berbasis konteks Maluku dan Indonesia Timur, dirancang agar dapat dipakai tanpa internet setelah dibuka atau diunduh.</p><p>Setiap materi menghubungkan tiga representasi kimia: makroskopik, submikroskopik, dan simbolik. Model pada simulasi merupakan penyederhanaan dan diberi keterangan.</p><p>Versi 1.0 (MVP). Materi: Struktur Atom dan Sistem Periodik Unsur.</p></div></div>'}
+function vPengelola(){
+  if(!pinOK){return head('Mode Pengelola','Khusus guru dan dosen')+'<div class="pad"><button class="back" data-act="go" data-v="lainnya">← Lainnya</button><div class="card" style="display:flex;flex-direction:column;gap:12px"><div><label for="pin">'+(S.pin?'Masukkan PIN':'Buat PIN 4 angka (pertama kali)')+'</label><input id="pin" type="password" inputmode="numeric" maxlength="4" autocomplete="off"></div><button class="btn" data-act="pin">'+(S.pin?'Masuk':'Simpan PIN dan masuk')+'</button><div style="font-size:12px;color:var(--mut)">PIN hanya mencegah perubahan tidak sengaja di perangkat ini. Ini bukan pengamanan data.</div></div></div>'}
+  var h=head('Kelola Materi','Mode Pengelola')+'<div class="pad"><button class="back" data-act="go" data-v="lainnya">← Lainnya</button>';
+  S.materi.forEach(function(m){h+='<div class="card"><b>'+esc(m.judul)+'</b><div style="font-size:12px;color:var(--mut)">'+esc(m.jenjang)+' · '+m.soal.length+' soal</div><div class="row" style="margin-top:8px"><button class="btn alt sm" data-act="ed" data-m="'+esc(m.id)+'">Ubah</button><button class="btn alt sm" data-act="dup" data-m="'+esc(m.id)+'">Duplikat</button><button class="btn alt sm" data-act="exp" data-m="'+esc(m.id)+'">Ekspor</button><button class="btn danger sm" data-act="del" data-m="'+esc(m.id)+'">Hapus</button></div></div>'});
+  if(!S.materi.length)h+='<div class="card">Belum ada materi. Tambahkan materi baru atau impor paket.</div>';
+  h+='<button class="btn" data-act="new">+ Tambah materi</button><div class="row"><button class="btn alt" data-act="expall">Ekspor semua paket</button><button class="btn alt" data-act="imp">Impor paket</button></div><div style="font-size:12px;color:var(--mut)">Paket materi berupa satu berkas .json yang dapat dikirim lewat WhatsApp, lalu diimpor di perangkat lain tanpa internet.</div></div>';
+  return h}
+function vEditor(){
+  var h='<div class="pad"><button class="back" data-act="go" data-v="pengelola">← Batal</button><h2>'+(E._baru?'Materi baru':'Ubah materi')+'</h2><div class="card" style="display:flex;flex-direction:column;gap:12px">'
+  +'<div><label for="f-judul">Judul materi</label><input id="f-judul" type="text" data-f="judul" maxlength="120" value="'+esc(E.judul)+'"></div>'
+  +'<div><label for="f-jenjang">Jenjang</label><select id="f-jenjang" data-f="jenjang"><option'+(E.jenjang==='SMA'?' selected':'')+'>SMA</option><option'+(E.jenjang==='Mahasiswa'?' selected':'')+'>Mahasiswa</option></select></div>'
+  +'<div><label for="f-konteks">Konteks lokal (Maluku/Indonesia Timur)</label><input id="f-konteks" type="text" data-f="konteks" maxlength="160" value="'+esc(E.konteks)+'"></div>'
+  +'<div><label for="f-viz">Visualisasi interaktif</label><select id="f-viz" data-f="viz"><option value=""'+(E.viz===''?' selected':'')+'>Tanpa visualisasi</option><option value="atom"'+(E.viz==='atom'?' selected':'')+'>Model atom (di bagian Submikroskopik)</option><option value="tabel"'+(E.viz==='tabel'?' selected':'')+'>Tabel periodik (di bagian Aktivitas)</option></select></div>';
+  E.media=E.media||{};h+='<div class="sand" style="font-size:13px"><b>Tips menulis:</b> **tebal**, *miring*, H_{2}O untuk subskrip, Na^{+} untuk superskrip. Pilih teks lalu tekan tombol di bawah kotak teks. Setiap bagian dapat diberi gambar atau video. Gambar diperkecil otomatis; video maksimal 3 MB.'+(idb?'':'<br><b>Penyimpanan media tidak tersedia di tampilan ini:</b> gambar dan video hilang saat halaman ditutup. Ekspor paket agar aman.')+'</div>';FIELDS.forEach(function(f){h+='<div><label for="f-'+f[0]+'">'+f[1]+'</label><textarea id="f-'+f[0]+'" data-f="'+f[0]+'">'+esc(E[f[0]])+'</textarea>'+medEd(f[0])+'</div>'});
+  h+='</div><h3>Soal latihan ('+E.soal.length+')</h3>';
+  E.soal.forEach(function(s,k){
+    h+='<div class="card" style="display:flex;flex-direction:column;gap:10px"><div class="row" style="justify-content:space-between"><b>Soal '+(k+1)+'</b><button class="btn danger sm" data-act="delsoal" data-k="'+k+'">Hapus soal</button></div>'
+    +'<div><label>Jenis</label><select data-s="'+k+'" data-key="tipe"><option value="pg"'+(s.tipe==='pg'?' selected':'')+'>Pilihan ganda</option><option value="bs"'+(s.tipe==='bs'?' selected':'')+'>Benar / Salah</option><option value="isian"'+(s.tipe==='isian'?' selected':'')+'>Isian singkat</option></select></div>'
+    +'<div><label>Teks soal</label><textarea data-s="'+k+'" data-key="teks">'+esc(s.teks)+'</textarea></div>';
+    if(s.tipe==='pg'){for(var o=0;o<4;o++)h+='<div><label>Opsi '+'ABCD'[o]+'</label><input type="text" data-s="'+k+'" data-key="o'+o+'" value="'+esc(s.opsi[o])+'"></div>';h+='<div><label>Kunci jawaban</label><select data-s="'+k+'" data-key="kunci">'+[0,1,2,3].map(function(o){return '<option value="'+o+'"'+(s.kunci===o?' selected':'')+'>'+'ABCD'[o]+'</option>'}).join('')+'</select></div>'}
+    else if(s.tipe==='bs')h+='<div><label>Kunci jawaban</label><select data-s="'+k+'" data-key="kunci"><option value="true"'+(s.kunci===true?' selected':'')+'>Benar</option><option value="false"'+(s.kunci===false?' selected':'')+'>Salah</option></select></div>';
+    else h+='<div><label>Kunci jawaban (pisahkan alternatif dengan tanda |)</label><input type="text" data-s="'+k+'" data-key="kunci" value="'+esc(s.kunci)+'"></div>';
+    h+='<div><label>Pembahasan</label><textarea data-s="'+k+'" data-key="bahas">'+esc(s.bahas)+'</textarea></div></div>'});
+  return h+'<button class="btn alt" data-act="addsoal">+ Tambah soal</button><button class="btn alt" data-act="pre">Pratinjau materi</button><button class="btn" data-act="saveed">Simpan materi</button></div>'}
+function vPengaturan(){
+  var h=head('Pengaturan','Profil dan unduhan')+'<div class="pad"><button class="back" data-act="go" data-v="lainnya">← Lainnya</button>';
+  if(!storageOk)h+='<div class="warn">Penyimpanan peramban tidak tersedia di tampilan ini. Progres hanya bertahan selama halaman terbuka. Gunakan cadangan.</div>';
+  h+='<div class="card" style="display:flex;flex-direction:column;gap:10px"><div><label for="pn">Nama panggilan</label><input id="pn" type="text" maxlength="40" value="'+esc(S.profil.nama)+'"></div><div><label for="pj">Jenjang</label><select id="pj"><option'+(S.profil.jenjang==='SMA'?' selected':'')+'>SMA</option><option'+(S.profil.jenjang==='Mahasiswa'?' selected':'')+'>Mahasiswa</option></select></div><button class="btn sm" data-act="saveprof">Simpan profil</button></div>'
+  +'<h3>Unduhan offline</h3><div class="card"><table class="t">'+S.materi.map(function(m){return '<tr><td>'+esc(m.judul)+'</td><td style="text-align:right"><b class="tag">Tersimpan</b></td></tr>'}).join('')+'</table></div>'
+  +'<div class="card" style="display:flex;flex-direction:column;gap:10px"><b>Aplikasi offline</b><span style="font-size:13px;color:var(--mut)">Simpan seluruh aplikasi beserta materi saat ini sebagai satu berkas .html. Berkas ini dapat dibuka tanpa internet di Windows dan Android, dan dibagikan lewat WhatsApp atau Bluetooth.</span><button class="btn" data-act="offline">Unduh aplikasi (berkas .html)</button></div>'
+  +'<div class="card" style="display:flex;flex-direction:column;gap:10px"><b>Cadangan progres</b><span style="font-size:13px;color:var(--mut)">Data tersimpan di peramban perangkat ini. Cadangkan secara berkala agar tidak hilang.</span><div class="row"><button class="btn alt" data-act="expprog">Cadangkan progres</button><button class="btn alt" data-act="imp">Pulihkan / impor</button></div></div>'
+  +'<button class="btn danger" data-act="reset">Hapus semua data di perangkat ini</button></div>';
+  return h}
+function vModal(){
+  if(!modal)return '';var b='';
+  if(modal.t==='confirm')b='<h3>'+esc(modal.msg)+'</h3><div class="row"><button class="btn danger" data-act="mok">Ya, lanjutkan</button><button class="btn alt" data-act="mno">Batal</button></div>';
+  else if(modal.t==='imp')b='<h3>Impor paket atau cadangan</h3><div><label for="fil">Pilih berkas .json</label><input id="fil" type="file" accept=".json,application/json"></div><div><label for="pas">atau tempel isi berkas</label><textarea id="pas"></textarea></div>'+(modal.msg?'<div class="warn">'+esc(modal.msg)+'</div>':'')+'<div class="row"><button class="btn" data-act="doimp">Impor</button><button class="btn alt" data-act="mno">Tutup</button></div>';
+  else if(modal.t==='pre'){b='<h3>Pratinjau: '+esc(E.judul||'(tanpa judul)')+'</h3>'+FIELDS.map(function(f){return '<div><div class="tag">'+f[1]+'</div><div class="txt">'+para(E[f[0]]||'(kosong)')+'</div>'+mediaHtml(E,f[0])+'</div>'}).join('')+'<button class="btn alt" data-act="mno">Tutup</button>'}
+  else if(modal.t==='teks')b='<h3>Salin teks ini</h3><p style="margin:0;font-size:13px">Penyimpanan berkas langsung tidak tersedia. Salin isinya lalu simpan sebagai <b>'+esc(modal.name)+'</b>.</p><textarea id="cp" readonly style="min-height:160px">'+esc(modal.data)+'</textarea><div class="row"><button class="btn" data-act="copy">Salin</button><button class="btn alt" data-act="mno">Tutup</button></div>';
+  return '<div class="modalbg" role="dialog" aria-modal="true"><div class="modal">'+b+'</div></div>'}
+function render(){
+  var a=$('#app'),n=V.name,fl=document.activeElement&&document.activeElement.id;
+  ensureWeek();setTimeout(evalAll,0);
+  if(n==='splash'){a.innerHTML=vSplash()+vModal();return}
+  if(n==='welcome'){a.innerHTML='<div class="wrap"><main>'+vWelcome()+'</main></div>'+vModal();return}
+  var views={beranda:vBeranda,belajar:vBelajar,materi:vMateri,latihan:vLatihan,quiz:vQuiz,hasil:vHasil,progres:vProgres,tantangan:vTantangan,lainnya:vLainnya,pengelola:vPengelola,editor:vEditor,pengaturan:vPengaturan,tentang:vTentang};
+  var act=activeNav(),nav='<nav class="bar"><div class="logo">KIMIAKU</div>'+Object.keys(NAVL).map(function(k){return '<button class="'+(act===k?'on':'')+'" data-act="go" data-v="'+k+'" aria-label="'+NAVL[k]+'"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="'+ICON[k]+'"/></svg>'+NAVL[k]+'</button>'}).join('')+'</nav>';
+  a.innerHTML='<div class="wrap">'+nav+'<main>'+(views[n]||vBeranda)()+'</main></div>'+vModal()+(toastMsg?'<div class="toast" role="status">'+esc(toastMsg)+'</div>':'');
+  if(fl&&$('#'+fl)&&/^(zr|isi|refl)$/.test(fl)){try{$('#'+fl).focus()}catch(e){}}
+}
+function vizUpdate(){var m=getM(V.m);if(!m)return;if(m.viz==='atom'){var vb=$('#vizbody');if(!vb)return;vb.innerHTML=atomBody();var z=$('#zr');if(z)z.value=AV.z;var l=$('#zl');if(l)l.textContent=ELS[AV.z-1][0]+' · '+ELS[AV.z-1][2]}else{var v=$('#viz');if(v)v.innerHTML=tableViz()}}
+
+/* ---------- aksi ---------- */
+function go(n,x){V=Object.assign({name:n},x||{});if(n!=='pengelola'&&n!=='editor')pinOK=pinOK;render();window.scrollTo(0,0)}
+function judge(s,val){if(s.tipe==='pg'||s.tipe==='bs')return val===s.kunci;var n=function(x){return String(x).toLowerCase().replace(/[−–⁻]/g,'-').replace(/⁺/g,'+').replace(/\s+/g,'')};return String(s.kunci).split('|').some(function(k){return n(k)===n(val)})}
+function answer(val){var m=getM(Q.mid),s=m.soal[Q.i];Q.sel=val;Q.ok=judge(s,val);Q.fb=true;Q.res[Q.i]=Q.ok;var key=m.id+':'+s.id;ensureWeek();if(Q.ok){S.mg.benar++;if(!S.benar[key]){S.benar[key]=1;award(10)}}mark();render()}
+function finishQuiz(){var m=getM(Q.mid),ok=Q.res.filter(Boolean).length,sk=Math.round(ok/m.soal.length*100),p=prog(m.id);if(p.best==null||sk>p.best)p.best=sk;ensureWeek();if(sk>=80)S.mg.k80++;if(sk===100&&!p.perfect){p.perfect=1;award(20)}visit(m.id,8);S.hist.push({m:m.id,skor:sk,t:Date.now()});if(S.hist.length>200)S.hist.shift();persist();evalBadges();go('hasil')}
+function download(m){return JSON.stringify({kimiaku:'paket',versi:2,materi:m,files:filesFor(m)})}
+document.addEventListener('click',function(ev){
+  var t=ev.target.closest('[data-act]');if(!t)return;var a=t.dataset.act,d=t.dataset;
+  switch(a){
+  case 'start':go(S.profil.nama?'beranda':'welcome');break;
+  case 'mulai':var nm=$('#nm').value.trim();if(!nm){toast('Tulis nama panggilanmu dulu');break}S.profil.nama=nm.slice(0,40);S.profil.jenjang=$('#jj').value;persist();go('beranda');break;
+  case 'go':go(d.v);break;
+  case 'jenjang':V.jenjang=d.j;render();break;
+  case 'buka':V={name:'materi',m:d.m,step:0};render();window.scrollTo(0,0);break;
+  case 'step':V.step=Math.max(0,Math.min(STEPS.length-1,+d.i));render();window.scrollTo(0,0);evalBadges();break;
+  case 'selesai':var p=prog(d.m);p.refl=$('#refl').value.slice(0,2000);visit(d.m,9);if(p.refl.trim()){ensureWeek();S.mg.rf[d.m]=1}if(Object.keys(p.v).length===STEPS.length&&!p.done){p.done=1;award(50);toast('Materi selesai! +50 poin')}persist();evalBadges();go('belajar');break;
+  case 'az':AV.z=+d.z;AV.e=AV.z;vizUpdate();break;
+  case 'ae':AV.e=Math.max(0,Math.min(20,AV.e+(+d.d)));vizUpdate();break;
+  case 'pz':PT.z=+d.z;vizUpdate();break;
+  case 'qstart':var mm=getM(d.m);if(!mm||!mm.soal.length){toast('Materi ini belum punya soal');break}Q={mid:d.m,i:0,sel:null,fb:false,ok:false,res:[]};go('quiz');break;
+  case 'qpick':answer(d.k==='true'?true:d.k==='false'?false:+d.k);break;
+  case 'qisi':var v=$('#isi').value.trim();if(!v){toast('Tulis jawabanmu dulu');break}answer(v);break;
+  case 'qnext':if(Q.i+1<getM(Q.mid).soal.length){Q.i++;Q.sel=null;Q.fb=false;render();window.scrollTo(0,0)}else finishQuiz();break;
+  case 'pin':var pv=$('#pin').value;if(!/^\d{4}$/.test(pv)){toast('PIN harus 4 angka');break}if(!S.pin){S.pin=pv;persist();pinOK=true;render()}else if(S.pin===pv){pinOK=true;render()}else toast('PIN salah');break;
+  case 'fmt':var ta=$('#f-'+d.f);if(!ta)break;var s0=ta.selectionStart,s1=ta.selectionEnd,sel=ta.value.slice(s0,s1),w2={b:['**','**'],i:['*','*'],sub:['_{','}'],sup:['^{','}']}[d.k],ins=w2?w2[0]+(sel||'teks')+w2[1]:d.s;ta.setRangeText(ins,s0,s1,'end');E[d.f]=ta.value;ta.focus();break;
+  case 'addurl':var ui=document.querySelector('[data-urlf="'+d.f+'"]'),uv=ui&&ui.value.trim();if(!uv||!/^https:\/\/\S+$/.test(uv)){toast('Tautan harus diawali https://');break}E.media=E.media||{};(E.media[d.f]=E.media[d.f]||[]);if(E.media[d.f].length>=8){toast('Maksimal 8 media per bagian');break}E.media[d.f].push({id:uid(),t:'url',cap:'',src:uv.slice(0,500)});render();break;
+  case 'mup':case 'mdn':var Ls=E.media[d.f],ii=+d.i,jj=a==='mup'?ii-1:ii+1;if(jj>=0&&jj<Ls.length){var tmp=Ls[ii];Ls[ii]=Ls[jj];Ls[jj]=tmp;render()}break;
+  case 'mdel':E.media[d.f].splice(+d.i,1);render();break;
+  case 'pre':modal={t:'pre'};render();break;
+  case 'new':E=normMateri({id:uid(),judul:'',soal:[]});E._baru=1;go('editor');break;
+  case 'ed':E=clone(getM(d.m));go('editor');break;
+  case 'dup':var c=clone(getM(d.m));c.id=uid();c.judul=c.judul+' (salinan)';S.materi.push(c);persist();toast('Materi diduplikasi');render();break;
+  case 'del':modal={t:'confirm',msg:'Hapus materi ini dari perangkat?',ok:function(){S.materi=S.materi.filter(function(x){return x.id!==d.m});delete S.progres[d.m];if(S.last===d.m)S.last=null;persist();gcMedia();toast('Materi dihapus')}};render();break;
+  case 'addsoal':E.soal.push({id:uid(),tipe:'pg',teks:'',opsi:['','','',''],kunci:0,bahas:''});render();break;
+  case 'delsoal':E.soal.splice(+d.k,1);render();break;
+  case 'saveed':if(!E.judul.trim()){toast('Judul materi wajib diisi');break}var n2=normMateri(E),ix=S.materi.findIndex(function(x){return x.id===n2.id});n2.versi=(ix>=0?(S.materi[ix].versi||1)+1:1);if(ix>=0)S.materi[ix]=n2;else S.materi.push(n2);persist();gcMedia();toast('Materi disimpan');go('pengelola');break;
+  case 'exp':var mx=getM(d.m);saveFile('kimiaku-'+mx.id.replace(/[^a-z0-9-]/gi,'')+'.json',download([mx]));break;
+  case 'expall':saveFile('kimiaku-paket-semua.json',download(S.materi));break;
+  case 'imp':modal={t:'imp',msg:''};render();break;
+  case 'doimp':var fi=$('#fil').files[0],pa=$('#pas').value.trim();if(fi){var r=new FileReader();r.onload=function(){var msg=importData(String(r.result));modal={t:'imp',msg:msg};render()};r.readAsText(fi)}else if(pa){modal={t:'imp',msg:importData(pa)};render()}else{modal.msg='Pilih berkas atau tempel isinya dulu.';render()}break;
+  case 'expprog':saveFile('kimiaku-progres-'+today()+'.json',JSON.stringify({kimiaku:'progres',versi:1,data:{profil:S.profil,progres:S.progres,benar:S.benar,hist:S.hist,poin:S.poin,badges:S.badges,hari:S.hari}}));break;
+  case 'offline':saveFile('KIMIAKU-offline.html',offlineHtml());break;
+  case 'saveprof':S.profil.nama=$('#pn').value.trim().slice(0,40);S.profil.jenjang=$('#pj').value;persist();toast('Profil disimpan');break;
+  case 'reset':modal={t:'confirm',msg:'Hapus semua data (progres dan perubahan materi) di perangkat ini?',ok:function(){S=fresh();persist();pinOK=false;V={name:'splash'};toast('Data direset')}};render();break;
+  case 'mok':var f=modal.ok;modal=null;f();render();break;
+  case 'mno':modal=null;render();break;
+  case 'copy':var ta=$('#cp');ta.select();try{navigator.clipboard.writeText(ta.value).then(function(){toast('Tersalin')},function(){toast('Tekan Ctrl+C untuk menyalin')})}catch(e){toast('Tekan Ctrl+C untuk menyalin')}break;
+  }});
+document.addEventListener('input',function(ev){
+  var t=ev.target;
+  if(t.id==='zr'){AV.z=+t.value;AV.e=AV.z;vizUpdate();return}
+  if(t.id==='refl'){var p=prog(V.m);p.refl=t.value.slice(0,2000);persist();return}
+  if(t.dataset.mc!==undefined&&E){var it0=E.media[t.dataset.mc][+t.dataset.mi];if(it0)it0.cap=t.value.slice(0,200);return}
+  if(t.dataset.f&&E){E[t.dataset.f]=t.value;return}
+  if(t.dataset.s!==undefined&&E){var s=E.soal[+t.dataset.s],k=t.dataset.key;if(k==='tipe')return;if(/^o\d$/.test(k))s.opsi[+k[1]]=t.value;else if(k==='kunci'){s.kunci=s.tipe==='pg'?+t.value:s.tipe==='bs'?t.value==='true':t.value}else s[k]=t.value}});
+document.addEventListener('change',function(ev){var t=ev.target;if(t.dataset.up&&t.type==='file'){addFile(t);return}if(t.dataset.s!==undefined&&E&&t.dataset.key==='tipe'){var s=E.soal[+t.dataset.s];s.tipe=t.value;s.opsi=['','','',''];s.kunci=t.value==='pg'?0:t.value==='bs'?true:'';render()}else if(t.dataset.f==='viz'||t.dataset.f==='jenjang'){if(E)E[t.dataset.f]=t.value}});
+window.addEventListener('online',function(){if(V.name==='beranda')render()});window.addEventListener('offline',function(){if(V.name==='beranda')render()});
+render();
+idbOpen().then(function(db){idb=db;return db?idbLoad():null}).then(function(){var f=SEED.files||{};Object.keys(f).forEach(function(k){if(!MEDIA[k])mput(k,f[k])});render()});
+})();
+</script>
+</body>
+</html>
