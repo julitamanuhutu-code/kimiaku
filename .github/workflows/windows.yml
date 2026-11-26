@@ -1,0 +1,46 @@
+name: Bangun KIMIAKU untuk Windows
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'index.html'
+      - 'windows/**'
+      - '.github/workflows/windows.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Salin aplikasi web
+        run: cp index.html windows/index.html
+      - name: Pasang dependensi
+        working-directory: windows
+        run: npm install --no-audit --no-fund
+      - name: Bangun KIMIAKU.exe
+        working-directory: windows
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+        run: npx electron-builder --win portable --publish never
+      - name: Siapkan berkas
+        run: cp windows/dist/KIMIAKU.exe KIMIAKU.exe
+      - uses: actions/upload-artifact@v4
+        with:
+          name: KIMIAKU-windows
+          path: KIMIAKU.exe
+      - name: Terbitkan sebagai rilis (tautan unduhan tetap)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete exe-terbaru -y --cleanup-tag || true
+          gh release create exe-terbaru KIMIAKU.exe --title "KIMIAKU untuk Windows (terbaru)" --notes "KIMIAKU.exe portabel untuk Windows 10/11. Unduh lalu klik dua kali."

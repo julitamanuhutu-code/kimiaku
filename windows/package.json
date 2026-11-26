@@ -1,0 +1,22 @@
+{
+  "name": "kimiaku",
+  "version": "1.0.0",
+  "description": "KIMIAKU - Smart Chemistry Learning Platform",
+  "main": "main.js",
+  "author": "KIMIAKU",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "electron": "^31.7.7",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "id.kimiaku.app",
+    "productName": "KIMIAKU",
+    "files": ["main.js", "index.html", "icon.png"],
+    "win": {
+      "icon": "icon.png",
+      "target": [{ "target": "portable", "arch": ["x64"] }]
+    },
+    "portable": { "artifactName": "KIMIAKU.exe" }
+  }
+}
